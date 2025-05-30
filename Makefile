@@ -3,30 +3,30 @@
 
 start:
 	@echo "🚀 Запуск парсера..."
-	docker compose up -d
+	docker-compose up -d
 	@echo "✅ Готово! Парсинг каждую минуту."
 
 stop:
 	@echo "🛑 Остановка..."
-	docker compose down
+	docker-compose down
 
 logs:
-	docker compose logs -f
+	docker-compose logs -f
 
 # Детальные логи всех типов
 logs-all:
 	@echo "📋 Cron логи:"
-	@docker compose exec mafia-parser tail -20 /var/log/cron.log 2>/dev/null || echo "❌ Cron логи недоступны"
+	@docker-compose exec mafia-parser tail -20 /var/log/cron.log 2>/dev/null || echo "❌ Cron логи недоступны"
 	@echo ""
 	@echo "📋 Scrapy логи:"
-	@docker compose exec mafia-parser tail -20 /var/log/scrapy.log 2>/dev/null || echo "❌ Scrapy логи недоступны"
+	@docker-compose exec mafia-parser tail -20 /var/log/scrapy.log 2>/dev/null || echo "❌ Scrapy логи недоступны"
 	@echo ""
 	@echo "📋 Тестовые логи:"
-	@docker compose exec mafia-parser tail -20 /var/log/test.log 2>/dev/null || echo "❌ Тестовые логи недоступны"
+	@docker-compose exec mafia-parser tail -20 /var/log/test.log 2>/dev/null || echo "❌ Тестовые логи недоступны"
 
 # Только cron логи
 logs-cron:
-	docker compose exec mafia-parser tail -f /var/log/cron.log
+	docker-compose exec mafia-parser tail -f /var/log/cron.log
 
 # Тест (одноразовый запуск)
 test:
@@ -40,9 +40,9 @@ test:
 status:
 	@echo "📊 Mafia Parser Status"
 	@echo "======================"
-	@if docker compose ps -q mafia-parser | grep -q .; then \
+	@if docker-compose ps -q mafia-parser | grep -q .; then \
 		echo "✅ Контейнер: ЗАПУЩЕН"; \
-		echo "🔄 Статус: $(docker compose ps mafia-parser --format 'table {{.State}}' | tail -1)"; \
+		echo "🔄 Статус: $(docker-compose ps mafia-parser --format 'table {{.State}}' | tail -1)"; \
 		echo "⏰ Время работы: $(docker inspect mafia-parser --format '{{.State.StartedAt}}' 2>/dev/null | cut -d'T' -f2 | cut -d'.' -f1)"; \
 	else \
 		echo "❌ Контейнер: ОСТАНОВЛЕН"; \
@@ -72,7 +72,7 @@ monitor:
 
 # Ручной запуск паука
 run:
-	docker compose exec mafia-parser scrapy crawl mafia
+	docker-compose exec mafia-parser scrapy crawl mafia
 
 # Очистка (оставляет только последние 10 архивов)
 clean:
@@ -83,4 +83,4 @@ clean:
 # Полная очистка
 clean-all:
 	rm -rf ./data/*
-	docker compose down -v
+	docker-compose down -v
