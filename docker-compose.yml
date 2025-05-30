@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  mafia-parser:
+    build: .
+    container_name: mafia-parser
+    volumes:
+      - ./data:/data
+    environment:
+      - TZ=Europe/Moscow
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 64M
